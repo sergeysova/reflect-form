@@ -12,7 +12,7 @@
   "dependencies": {
     "effector": "^21.7.5",
     "effector-react": "^21.2.1",
-    "effector-reflect": "^0.3.2",
+    "@effector/reflect": "^0.4.1",
     "eslint": "^7.17.0",
     "express": "^4.17.1",
     "patronum": "^1.0.0",
