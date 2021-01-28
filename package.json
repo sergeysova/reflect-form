@@ -1,0 +1,29 @@
+{
+  "name": "reflect-form",
+  "version": "0.0.0",
+  "description": "Effector forms over reflect",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergeysova/reflect-form.git"
+  },
+  "keywords": [
+    "effector",
+    "form",
+    "manager",
+    "state",
+    "reflect",
+    "field",
+    "fieldset",
+    "set"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sergeysova/reflect-form/issues"
+  },
+  "homepage": "https://github.com/sergeysova/reflect-form#readme"
+}
