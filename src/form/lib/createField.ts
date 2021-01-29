@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { createEvent, createStore, forward, sample } from 'effector';
-import { Field, FieldConfig } from './types';
+import { createEvent, createEffect, createStore, forward, sample, combine, guard } from 'effector';
+import { pending } from 'patronum/pending';
+import { Field, FieldConfig, FieldValidatorParams } from './types';
 
 // TODO add patronum debounce to field validation
 export const createField = ({
@@ -13,13 +14,8 @@ export const createField = ({
 }: FieldConfig): Field => {
   const $inputValue = createStore<string>(initialValue || '');
   const $inputIsTouched = createStore<boolean>(false);
-  const $inputError = createStore<string | null>(null);
+  const $inputError = createStore<any | null>(null);
   const $hasError = $inputError.map((error) => error !== null);
-
-  const createInputValidation = (value: string, touched: boolean) => ({
-    isRequired: touched && isRequired && value.length === 0,
-    hasValidator: touched && !!validators.length,
-  });
 
   const onInputChanged = createEvent<React.ChangeEvent<HTMLInputElement>>(`${name}Changed`);
   const onInputFocused = createEvent<React.ChangeEvent<HTMLInputElement>>(`${name}Focused`);
@@ -32,6 +28,7 @@ export const createField = ({
     if (touched) return;
     return !touched;
   });
+  $inputError.reset(validate);
 
   forward({
     from: onInputFocused,
@@ -48,30 +45,53 @@ export const createField = ({
     to: validate,
   });
 
-  sample({
-    source: [$inputValue, $inputIsTouched],
+  const $fieldMeta = combine({ name, value: $inputValue, touched: $inputIsTouched, error: $inputError });
+
+  const requiredFx = createEffect<FieldValidatorParams, null, string>(({ value }) => !isRequired || (value && value.length > 0) ? Promise.resolve(null) : Promise.reject(inputRequiredErrorText));
+
+  const kick = sample({
+    source: $fieldMeta,
     clock: validate,
-    fn: ([value, isTouched]) => {
-      const validation = createInputValidation(value, isTouched);
-
-      if (validation['isRequired']) return inputRequiredErrorText;
-
-      if (validation['hasValidator']) {
-        for (let i = 0; i < validators.length; i++) {
-          if (validators[i](value)) return validators[i](value);
-        }
-        return null;
-      }
-
-      return null;
-    },
-    target: $inputError,
   });
+
+  // kickstart validation
+  guard({
+    source: kick,
+    filter: ({ touched }) => touched,
+    target: requiredFx,
+  });
+
+  if (Boolean(validators.length)) {
+    sample({
+      source: $fieldMeta,
+      clock: requiredFx.done,
+      target: validators[0],
+    });
+
+    // successfull validation effect triggers the next one
+    for (let i = 1; i < validators.length; i++) {
+      sample({
+        source: $fieldMeta,
+        clock: validators[i - 1].done,
+        target: validators[i],
+      });
+    }
+  
+    // failed effect stops validation and fills the error store
+    for (let i = 0; i < validators.length; i++) {
+      forward({
+        from: validators[i].failData,
+        to: $inputError,
+      });
+    }
+  }
 
   sample({
     source: $inputValue,
     clock: onInputBlurred,
   });
+
+  const $validationPending = pending({ effects: [requiredFx, ...validators] });
 
   return {
     name,
@@ -80,6 +100,7 @@ export const createField = ({
     isTouched: $inputIsTouched,
     error: $inputError,
     hasError: $hasError,
+    validationPending: $validationPending,
     handlers: {
       onChange: onInputChanged,
       onFocus: onInputFocused,

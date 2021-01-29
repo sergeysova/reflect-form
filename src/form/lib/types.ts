@@ -1,7 +1,14 @@
 import { ChangeEvent } from 'react';
-import { Event, Store } from 'effector';
+import { Event, Store, Effect } from 'effector';
 
-export type FieldValidator = (value: string) => string | null;
+export type FieldValidatorParams = {
+  value: string;
+  name: string;
+  touched: boolean;
+  error: ReturnType<FieldValidator>;
+}
+
+export type FieldValidator = Effect<FieldValidatorParams, any, any>;
 
 type ValidateOn = 'change' | 'blur' | 'formSubmit';
 
@@ -25,6 +32,7 @@ export interface FieldState {
 export interface Field extends FieldState, Pick<FieldConfig, 'name'> {
   type: 'field';
   hasError: Store<boolean>;
+  validationPending: Store<boolean>,
   handlers: {
     onChange: FieldChangeEvent;
     onFocus: FieldChangeEvent;
