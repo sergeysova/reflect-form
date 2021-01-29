@@ -1,13 +1,29 @@
-import { createEvent } from 'effector';
-import { createField, createFieldset } from '../lib';
+import { createEvent, createEffect } from 'effector';
+import { createField, createFieldset, FieldValidatorParams } from '../lib';
 
 export const onSubmit = createEvent('');
+
+const lessThanThreeFx = createEffect<FieldValidatorParams, any, string>(({ value }) => {
+  if (value.length > 3) return 'Ура успех';
+
+  throw 'Введите больше 3-х символов';
+});
+
+const lessThanFiveFx = createEffect<FieldValidatorParams, any, string>(({ value }) => {
+  if (value.length > 5) return Promise.resolve();
+
+  return Promise.reject('Введите больше 5-ти символов');
+});
+
+lessThanFiveFx.failData.watch(error => console.log('Какая-то другая реакция на ошибку', error));
+lessThanFiveFx.doneData.watch(done => console.log('Какая-то другая реакция на успех', done));
+lessThanThreeFx.doneData.watch(done => console.log('Какая-то другая реакция на успех', done));
 
 export const firstName = createField({
   name: 'firstName',
   validators: [
-    (value) => (value.length <= 3 ? 'Введите больше 3-х символов' : null),
-    (value) => (value.length < 5 ? 'Введите больше 5-ти символов' : null),
+    lessThanThreeFx,
+    lessThanFiveFx,
   ],
   validateOn: 'change',
   isRequired: true,
