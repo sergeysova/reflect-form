@@ -49,6 +49,11 @@ export const createField = ({
 
   const requiredFx = createEffect<FieldValidatorParams, null, string>(({ value }) => !isRequired || (value && value.length > 0) ? Promise.resolve(null) : Promise.reject(inputRequiredErrorText));
 
+  forward({
+    from: requiredFx.failData,
+    to: $inputError,
+  });
+
   const kick = sample({
     source: $fieldMeta,
     clock: validate,
@@ -68,20 +73,23 @@ export const createField = ({
       target: validators[0],
     });
 
-    // successfull validation effect triggers the next one
+    forward({
+      from: validators[0].failData,
+      to: $inputError,
+    });
+
     for (let i = 1; i < validators.length; i++) {
+    // failed effect stops validation and fills the error store
+      forward({
+        from: validators[i].failData,
+        to: $inputError,
+      });
+
+    // successfull validation effect triggers the next one
       sample({
         source: $fieldMeta,
         clock: validators[i - 1].done,
         target: validators[i],
-      });
-    }
-  
-    // failed effect stops validation and fills the error store
-    for (let i = 0; i < validators.length; i++) {
-      forward({
-        from: validators[i].failData,
-        to: $inputError,
       });
     }
   }
