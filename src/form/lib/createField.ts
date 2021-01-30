@@ -66,19 +66,14 @@ export const createField = ({
     target: requiredFx,
   });
 
-  if (Boolean(validators.length)) {
+  if (validators.length > 0) {
     sample({
       source: $fieldMeta,
       clock: requiredFx.done,
       target: validators[0],
     });
 
-    forward({
-      from: validators[0].failData,
-      to: $inputError,
-    });
-
-    for (let i = 1; i < validators.length; i++) {
+    for (let i = 0; i < validators.length; i++) {
     // failed effect stops validation and fills the error store
       forward({
         from: validators[i].failData,
@@ -86,10 +81,10 @@ export const createField = ({
       });
 
     // successfull validation effect triggers the next one
-      sample({
+      validators[i + 1] && sample({
         source: $fieldMeta,
-        clock: validators[i - 1].done,
-        target: validators[i],
+        clock: validators[i].done,
+        target: validators[i + 1],
       });
     }
   }
