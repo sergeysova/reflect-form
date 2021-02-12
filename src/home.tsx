@@ -2,8 +2,8 @@ import * as React from 'react';
 import { reflect } from 'effector-reflect';
 import styled from 'styled-components';
 
-import { Input } from './form/input';
-import { firstName, lastName, email, onSubmit } from './form/form/model';
+import { Input } from './lib/form/input';
+import { firstName, lastName, email, onSubmit } from './lib/form/form/model';
 
 export const Home: React.FC = () => (
   <Form>

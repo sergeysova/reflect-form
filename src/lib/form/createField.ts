@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createEvent, createStore, forward, sample } from 'effector';
+import { createEvent, createStore, forward, guard, sample } from 'effector';
 import { Field, FieldConfig } from './types';
 
 // TODO add patronum debounce to field validation
@@ -10,6 +10,7 @@ export const createField = ({
   name,
   validateOn = 'change',
   inputRequiredErrorText = 'Поле обязательно для заполнения',
+  inputValuePattern,
 }: FieldConfig): Field => {
   const $inputValue = createStore<string>(initialValue || '');
   const $inputIsTouched = createStore<boolean>(false);
@@ -21,13 +22,32 @@ export const createField = ({
     hasValidator: touched && !!validators.length,
   });
 
+  const checkPattern = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!inputValuePattern) return true;
+
+    const valuePatterns = {
+      letters: /^\w+$/,
+      numbers: /^\d+$/,
+    };
+
+    const pattern = new RegExp(valuePatterns[inputValuePattern], 'giu');
+    return pattern.test(e.target.value);
+  };
+
   const onInputChanged = createEvent<React.ChangeEvent<HTMLInputElement>>(`${name}Changed`);
   const onInputFocused = createEvent<React.ChangeEvent<HTMLInputElement>>(`${name}Focused`);
   const onInputBlurred = createEvent<React.ChangeEvent<HTMLInputElement>>(`${name}Blurred`);
   const onInputTouched = createEvent<void>(`${name}Touched`);
   const validate = createEvent();
 
-  $inputValue.on(onInputChanged, (_, e) => e.currentTarget.value);
+  $inputValue.on(
+    guard({
+      source: onInputChanged,
+      filter: (value) => checkPattern(value),
+    }),
+    (_, e) => e.currentTarget.value,
+  );
+
   $inputIsTouched.on(onInputTouched, (touched) => {
     if (touched) return;
     return !touched;
@@ -80,6 +100,9 @@ export const createField = ({
     isTouched: $inputIsTouched,
     error: $inputError,
     hasError: $hasError,
+    triggers: {
+      validate,
+    },
     handlers: {
       onChange: onInputChanged,
       onFocus: onInputFocused,

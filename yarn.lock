@@ -980,6 +980,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
+"@effector/reflect@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@effector/reflect/-/reflect-0.4.1.tgz#5e44ecc80c4eb8265bde67723d7dc15f5158bf5b"
+  integrity sha512-mOdhNfPfVm41P49eabBKnS/yPl+irHUKULim4xl44yBowzHTZBpxNJjBYe0b3GhY0BtMpLseM51gnlJ7AsDMbg==
+
 "@emotion/is-prop-valid@^0.8.8":
   version "0.8.8"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz#db28b1c4368a259b60a97311d6a952d4fd01ac1a"
@@ -3481,11 +3486,6 @@ effector-react@^21.2.1:
   version "21.2.1"
   resolved "https://registry.yarnpkg.com/effector-react/-/effector-react-21.2.1.tgz#b6d1c8a5c61ffee841b41f4b697ec069094798c8"
   integrity sha512-NvQBKnA6VQ14aZcHjag5muqvqnfr4H8g3Ry8/nuiEWqR/c9LkKK9mUoU1lyQU7m/eKlvuXSqeDQ1I4iBsobMqA==
-
-effector-reflect@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/effector-reflect/-/effector-reflect-0.3.2.tgz#a8465094b5a211d721974f8e62d8479049a0e38c"
-  integrity sha512-8sPKuekNkJ+mj89RWVPUwxHqiqyu1eQ83c9F9I5f/BNwxXjByNjJipEsBNsZC5Mi3kBjA8MaZWc9PhJiqFScpw==
 
 effector@^21.7.5:
   version "21.7.5"

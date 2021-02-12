@@ -14,6 +14,7 @@ export type FieldConfig = {
   isRequired?: boolean;
   validateOn?: ValidateOn;
   validators?: FieldValidator[];
+  inputValuePattern?: 'letters' | 'numbers';
 };
 
 export interface FieldState {
@@ -29,6 +30,9 @@ export interface Field extends FieldState, Pick<FieldConfig, 'name'> {
     onChange: FieldChangeEvent;
     onFocus: FieldChangeEvent;
     onBlur: FieldChangeEvent;
+  };
+  triggers: {
+    validate: Event<any>;
   };
 }
 
