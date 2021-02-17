@@ -7,14 +7,17 @@ type ValidateOn = 'change' | 'blur' | 'formSubmit';
 
 export type FieldChangeEvent = Event<ChangeEvent<HTMLInputElement>>;
 
-export type FieldConfig = {
+export type FieldValuePatten = 'letters' | 'numbers';
+
+export interface FieldConfig {
   name: string;
-  initialValue?: string;
-  inputRequiredErrorText?: string;
+  defaultValue?: string;
   isRequired?: boolean;
   validateOn?: ValidateOn;
   validators?: FieldValidator[];
-};
+  fieldRequiredErrorText?: string;
+  fieldValuePattern?: FieldValuePatten;
+}
 
 export interface FieldState {
   error: Store<ReturnType<FieldValidator>>;
@@ -22,13 +25,16 @@ export interface FieldState {
   value: Store<string>;
 }
 
-export interface Field extends FieldState, Pick<FieldConfig, 'name'> {
+export interface Field extends FieldState, Pick<FieldConfig, 'name' | 'isRequired'> {
   type: 'field';
   hasError: Store<boolean>;
   handlers: {
     onChange: FieldChangeEvent;
     onFocus: FieldChangeEvent;
     onBlur: FieldChangeEvent;
+  };
+  triggers: {
+    validate: Event<any>;
   };
 }
 
