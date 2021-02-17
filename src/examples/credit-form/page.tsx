@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Input } from 'lib/form/input';
 import { Field } from 'lib/form/types';
 import { Select } from 'lib/form/select';
-import { userName, userDate, userEmail, $form, userCity } from './model';
+import { userName, userDate, userEmail, form, userCity, $result } from './model';
 import { Content, Row, Wrapper } from './styles';
 
 const OPTIONS = [
@@ -42,9 +42,15 @@ export const CreditForm: React.FC = () => (
           <Button>Отправить</Button>
         </Row>
       </form>
+      <Result />
     </Content>
   </Wrapper>
 );
+
+const Result = reflect({
+  view: styled.pre``,
+  bind: { children: $result },
+});
 
 const getField = (field: Field) => ({
   value: field.value.map((state) => state),
@@ -88,6 +94,6 @@ const Button = reflect({
   view: styled.button``,
   bind: {
     type: 'submit',
-    disabled: $form.hasError,
+    disabled: form.hasError,
   },
 });

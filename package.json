@@ -38,6 +38,13 @@
     "@types/webpack-env": "^1.16.0",
     "core-js": "^3.8.2",
     "razzle": "^3.3.9",
+    "stylelint": "^13.10.0",
+    "stylelint-config-idiomatic-order": "^8.1.0",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-no-unsupported-browser-features": "^4.1.4",
+    "stylelint-order": "^4.1.0",
+    "stylelint-prettier": "^1.1.2",
     "webpack": "^4.0.0"
   },
   "repository": {
