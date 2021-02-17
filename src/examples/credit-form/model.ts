@@ -1,6 +1,7 @@
+import { combine, restore } from 'effector';
 import { createField, createFieldset } from '../../lib/form';
 
-const fioPattern = /^(\w+\s){2,3}/gimu;
+const fioPattern = /^([А-Яа-я]+\s){2,3}/gimu;
 
 const checkYear = (year: string) => {
   const userBirthDate = parseInt(year);
@@ -41,6 +42,10 @@ export const userCity = createField({
   defaultValue: 'option3',
 });
 
-export const $form = createFieldset('user', [userName, userDate, userEmail, userCity]);
+export const form = createFieldset('user', [userName, userDate, userEmail, userCity]);
 
-$form.value.watch((values) => console.log(values));
+const $preview = combine(form.value, form.hasError, (value, hasError) => ({ value, hasError }));
+
+export const $result = $preview.map((s) => JSON.stringify(s, null, 2));
+
+form.value.watch((values) => console.log(values));
