@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { reflect } from 'effector-reflect';
+import { reflect } from '@effector/reflect';
 import styled from 'styled-components';
 
 import { Input } from 'lib/form/input';

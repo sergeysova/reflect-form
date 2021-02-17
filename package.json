@@ -6,7 +6,7 @@
   "scripts": {
     "start": "razzle start --type=spa",
     "build": "razzle build --type=spa",
-    "test": "razzle test --env=jsdom",
+    "test": "razzle test --env=jsdom --passWithNoTests",
     "start:prod": "serve -s build/public"
   },
   "dependencies": {
