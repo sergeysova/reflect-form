@@ -22,6 +22,7 @@ export interface FieldConfig {
 export interface FieldState {
   error: Store<ReturnType<FieldValidator>>;
   isTouched: Store<boolean>;
+  isValid: Store<boolean>;
   value: Store<string>;
 }
 
@@ -42,6 +43,7 @@ export interface FieldSet {
   name: string;
   hasError: Store<boolean>;
   type: 'fieldset';
+  isValid: Store<boolean>;
   value: Store<{
     [name: string]: unknown;
   }>;

@@ -1,16 +1,15 @@
-import { combine, createEvent, Store } from 'effector';
+import { combine, Store } from 'effector';
 
 import { Field, FieldSet } from './types';
 
 export const createFieldset = (name: string, fields: (Field | FieldSet)[]): FieldSet => {
-  let values: { [key: string]: Store<any> } = {};
-  const onFieldsetError = createEvent();
+  const values: { [key: string]: Store<any> } = {};
 
   const inputsErrors = fields.map((input) => input.hasError);
+  const inputsValid = fields.map((input) => input.isValid);
 
   const hasError = combine(inputsErrors, (errors) => errors.includes(true));
-
-  hasError.on(onFieldsetError, () => true);
+  const isValid = combine(inputsValid, (errors) => !errors.includes(false));
 
   fields.forEach((field) => {
     values[field.name] = field.value;
@@ -21,5 +20,6 @@ export const createFieldset = (name: string, fields: (Field | FieldSet)[]): Fiel
     type: 'fieldset',
     value: combine(values),
     hasError,
+    isValid,
   };
 };

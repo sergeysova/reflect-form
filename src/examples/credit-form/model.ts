@@ -44,8 +44,10 @@ export const userCity = createField({
 
 export const form = createFieldset('user', [userName, userDate, userEmail, userCity]);
 
-const $preview = combine(form.value, form.hasError, (value, hasError) => ({ value, hasError }));
+const $preview = combine(form.value, form.hasError, form.isValid, (value, hasError, isValid) => ({
+  value,
+  hasError,
+  isValid,
+}));
 
 export const $result = $preview.map((s) => JSON.stringify(s, null, 2));
-
-form.value.watch((values) => console.log(values));
