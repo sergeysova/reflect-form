@@ -31,6 +31,7 @@ export const createField = ({
   const $fieldIsTouched = createStore<boolean>(false);
   const $fieldError = createStore<string | null>(null);
   const $hasError = $fieldError.map((error) => error !== null);
+  const $isValid = $fieldValue.map((value) => !(!value.length && isRequired));
 
   const createFieldValidation = (value: string, touched: boolean) => ({
     isRequired: touched && isRequired && value.length === 0,
@@ -102,6 +103,7 @@ export const createField = ({
     value: $fieldValue,
     isTouched: $fieldIsTouched,
     isRequired,
+    isValid: $isValid,
     error: $fieldError,
     hasError: $hasError,
     triggers: {

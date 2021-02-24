@@ -94,6 +94,5 @@ const Button = reflect({
   view: styled.button``,
   bind: {
     type: 'submit',
-    disabled: form.hasError,
   },
 });
