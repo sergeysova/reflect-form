@@ -35,7 +35,7 @@ export interface Field extends FieldState, Pick<FieldConfig, 'name' | 'isRequire
     onBlur: FieldChangeEvent;
   };
   triggers: {
-    validate: Event<any>;
+    validate: any;
   };
 }
 
@@ -44,6 +44,9 @@ export interface FieldSet {
   hasError: Store<boolean>;
   type: 'fieldset';
   isValid: Store<boolean>;
+  triggers: {
+    validate: any;
+  };
   value: Store<{
     [name: string]: unknown;
   }>;

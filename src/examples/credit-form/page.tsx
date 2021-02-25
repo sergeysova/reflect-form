@@ -93,6 +93,10 @@ const City = reflect({
 const Button = reflect({
   view: styled.button``,
   bind: {
-    type: 'submit',
+    // type: 'submit',
+    onClick: (e) => {
+      e.preventDefault();
+      form.triggers.validate();
+    },
   },
 });
