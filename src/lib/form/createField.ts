@@ -42,7 +42,8 @@ export const createField = ({
   const onFieldFocused = createEvent<React.ChangeEvent<HTMLInputElement>>(`${name}Focused`);
   const onFieldBlurred = createEvent<React.ChangeEvent<HTMLInputElement>>(`${name}Blurred`);
   const onFieldTouched = createEvent<void>(`${name}Touched`);
-  const validate = createEvent();
+  const onValidateTrigger = createEvent();
+  const forceValidate = createEvent();
 
   $fieldValue.on(
     guard({
@@ -52,15 +53,19 @@ export const createField = ({
     (_, e) => e.currentTarget.value,
   );
 
-  $fieldIsTouched.on(onFieldTouched, (touched) => {
-    if (touched) return;
-    return !touched;
-  });
+  $fieldIsTouched
+    .on(onValidateTrigger, () => true)
+    .on(onFieldTouched, (touched) => {
+      if (touched) return;
+      return !touched;
+    });
 
   forward({
     from: onFieldFocused,
     to: onFieldTouched,
   });
+
+  forward({ from: onValidateTrigger, to: forceValidate });
 
   forward({
     from: {
@@ -69,12 +74,12 @@ export const createField = ({
       focus: onFieldFocused,
       formSubmit: createEvent(),
     }[validateOn],
-    to: validate,
+    to: forceValidate,
   });
 
   sample({
     source: [$fieldValue, $fieldIsTouched],
-    clock: validate,
+    clock: forceValidate,
     fn: ([value, isTouched]) => {
       const validation = createFieldValidation(value, isTouched);
 
@@ -107,7 +112,7 @@ export const createField = ({
     error: $fieldError,
     hasError: $hasError,
     triggers: {
-      validate,
+      validate: onValidateTrigger,
     },
     handlers: {
       onChange: onFieldChanged,

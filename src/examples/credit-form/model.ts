@@ -51,3 +51,5 @@ const $preview = combine(form.value, form.hasError, form.isValid, (value, hasErr
 }));
 
 export const $result = $preview.map((s) => JSON.stringify(s, null, 2));
+
+form.triggers.validate.watch(() => console.log('validated'));
