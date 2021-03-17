@@ -3,9 +3,18 @@ import { reflect } from '@effector/reflect';
 import styled from 'styled-components';
 
 import { Input } from 'lib/form/input';
-import { Field } from 'lib/form/types';
 import { Select } from 'lib/form/select';
-import { userName, userDate, userEmail, form, userCity, $result } from './model';
+import { Checkbox } from 'lib/form/checkbox';
+import {
+  userName,
+  userDate,
+  userEmail,
+  form,
+  userCity,
+  $result,
+  userRulesAccept,
+  checkboxTextField,
+} from './model';
 import { Content, Row, Wrapper } from './styles';
 
 const OPTIONS = [
@@ -39,6 +48,12 @@ export const CreditForm: React.FC = () => (
         </Row>
         <City name="select" options={OPTIONS} />
         <Row>
+          <AgreeCheckbox />
+        </Row>
+        <Row>
+          <TextCheckbox />
+        </Row>
+        <Row>
           <Button>Отправить</Button>
         </Row>
       </form>
@@ -52,9 +67,9 @@ const Result = reflect({
   bind: { children: $result },
 });
 
-const getField = (field: Field) => ({
-  value: field.value.map((state) => state),
-  error: field.error.map((state) => state),
+const getField = (field: any) => ({
+  value: field.value.map((state: string | boolean) => state),
+  error: field.error.map((state: string | boolean) => state),
   ...field.handlers,
 });
 
@@ -87,6 +102,25 @@ const City = reflect({
   bind: {
     defaultValue: userCity.value.map((state) => state),
     ...getField(userCity),
+  },
+});
+
+const TextCheckbox = reflect({
+  view: Checkbox,
+  bind: {
+    label: 'текстовый чекбокс',
+    defaultValue: checkboxTextField.value.map((state) => state),
+    defaultChecked: true,
+    ...getField(checkboxTextField),
+  },
+});
+
+const AgreeCheckbox = reflect({
+  view: Checkbox,
+  bind: {
+    label: 'согласие на обработку данных',
+    defaultChecked: userRulesAccept.value.map((state) => state),
+    ...getField(userRulesAccept),
   },
 });
 

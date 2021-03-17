@@ -9,25 +9,40 @@ export type FieldChangeEvent = Event<ChangeEvent<HTMLInputElement>>;
 
 export type FieldValuePatten = 'letters' | 'numbers';
 
-export interface FieldConfig {
+export interface BaseFieldConfig<T> {
   name: string;
-  defaultValue?: string;
-  isRequired?: boolean;
+  defaultValue?: T;
   validateOn?: ValidateOn;
-  validators?: FieldValidator[];
-  fieldRequiredErrorText?: string;
-  fieldValuePattern?: FieldValuePatten;
+  isRequired?: boolean;
+  requiredErrorText?: string;
 }
 
-export interface FieldState {
+export interface CheckboxFieldConfig<T> extends BaseFieldConfig<T> {
+  defaultChecked?: boolean;
+}
+
+export interface InputFieldConfig extends BaseFieldConfig<string> {
+  validators?: FieldValidator[];
+  valuePattern?: FieldValuePatten;
+}
+
+export interface FieldState<T> {
+  value: Store<T>;
   error: Store<ReturnType<FieldValidator>>;
   isTouched: Store<boolean>;
   isValid: Store<boolean>;
-  value: Store<string>;
 }
 
-export interface Field extends FieldState, Pick<FieldConfig, 'name' | 'isRequired'> {
-  type: 'field';
+export interface FieldEvents {
+  onChanged: FieldChangeEvent;
+  onFocused: FieldChangeEvent;
+  onBlurred: FieldChangeEvent;
+  onTouched: Event<void>;
+  onValidate: Event<void>;
+  onForceValidate: Event<void>;
+}
+
+interface Field<T> extends Omit<FieldState<T>, 'isValid'> {
   hasError: Store<boolean>;
   handlers: {
     onChange: FieldChangeEvent;
@@ -35,19 +50,49 @@ export interface Field extends FieldState, Pick<FieldConfig, 'name' | 'isRequire
     onBlur: FieldChangeEvent;
   };
   triggers: {
-    validate: any;
+    validate: Event<void>;
+    forceValidate?: Event<void>;
   };
 }
 
-export interface FieldSet {
-  name: string;
-  hasError: Store<boolean>;
-  type: 'fieldset';
-  isValid: Store<boolean>;
-  triggers: {
-    validate: any;
-  };
-  value: Store<{
-    [name: string]: unknown;
-  }>;
+export interface InputField
+  extends Field<string>,
+    FieldState<string>,
+    Pick<BaseFieldConfig<string>, 'name' | 'isRequired'> {
+  type: 'field';
 }
+
+export interface CheckboxField<T>
+  extends Field<T>,
+    FieldState<T>,
+    Pick<BaseFieldConfig<T>, 'name' | 'isRequired'> {
+  type: 'field';
+}
+
+export interface BaseFieldSet<T>
+  extends Pick<InputField, 'name' | 'triggers' | 'isValid' | 'hasError'> {
+  type: 'fieldset';
+  value: Store<T>;
+}
+
+export type InputFieldSetValue = Store<{
+  [name: string]: unknown;
+}>;
+
+export type CheckboxSetValue = Store<string[]>;
+
+export type InputFieldSet = BaseFieldSet<InputFieldSetValue> &
+  Pick<InputField, 'name' | 'hasError'>;
+
+export type CheckboxSet = BaseFieldSet<CheckboxSetValue> &
+  Pick<CheckboxField<string>, 'name' | 'hasError'>;
+
+export type FieldSetValues =
+  | {
+      [name: string]: unknown;
+    }
+  | string[];
+
+export type FormField = InputField | CheckboxField<string> | CheckboxField<boolean>;
+
+export type FormFieldSet = InputFieldSet | CheckboxSet;
