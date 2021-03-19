@@ -1,82 +1,70 @@
-import { combine, createEvent, forward, Store } from 'effector';
+import { combine, createEvent, forward, Store, Event } from 'effector';
+import { Field } from './createField';
 
-import { FormField, FormFieldSet, InputField } from './types';
+type FieldSetType = 'object' | 'array';
 
-type Fields = (FormField | FormFieldSet)[];
+type FieldSetValues = { [key: string]: Store<any> } | Store<any>[];
 
-interface BaseFieldSet extends Pick<InputField, 'name' | 'triggers' | 'isValid' | 'hasError'> {
-  type: 'fieldset';
-  value: any;
-}
-
-interface FieldConfig {
+interface FieldSet {
   name: string;
-  fields: Fields;
+  type: 'fieldset';
+  value: Store<FieldSetValues>;
+  triggers: {
+    validate: Event<void>;
+  };
+  isValid: Store<boolean>;
 }
 
-const createBaseFieldSet = (config: FieldConfig): ((value: any) => BaseFieldSet) => {
+const getFieldSetValidation = (fields: (FieldSet | Field<any>)[]) => {
   const validate = createEvent();
 
   forward({
     from: validate,
-    to: config.fields.map((input) => input.triggers.validate),
+    to: fields.map((field) => field.triggers.validate),
   });
 
+  // TODO research cases when boolean checkbox defaults to true
+  // TODO look for cases to create checkbox isValid inside component
   const isValid = combine(
-    config.fields.map((input) => input.isValid),
-    (errors) => !errors.includes(false),
+    fields.map((field) => field.isValid),
+    (errors) => !errors.includes(true),
   );
 
-  return (fn: (fields: any) => any) => {
-    const { value, hasError } = fn(config.fields);
-
-    return {
-      name: config.name,
-      value,
-      hasError,
-      type: 'fieldset',
-      triggers: {
-        validate,
-      },
-      isValid,
-    };
-  };
+  return { validate, isValid };
 };
 
-const getInputFieldSetValues = (fields: Fields) => {
-  const values: { [key: string]: Store<any> } = {};
+const getFieldSetValues = (
+  type: FieldSetType,
+  fields: (FieldSet | Field<any>)[],
+): FieldSetValues => {
+  if (type === 'array') {
+    return fields.map((field) => field.value);
+  }
 
-  const hasError = combine(
-    fields.map((input) => input.hasError),
-    (errors) => errors.includes(true),
-  );
+  const values: { [key: string]: Store<any> } = {};
 
   fields.forEach((field) => {
     values[field.name] = field.value;
   });
 
+  return values;
+};
+
+export const createFieldset = (
+  name: string,
+  type: FieldSetType,
+  fields: (Field<any> | FieldSet)[],
+): FieldSet => {
+  const values = getFieldSetValues(type, fields);
+  const { validate, isValid } = getFieldSetValidation(fields);
+
   return {
+    name,
+    type: 'fieldset',
     value: combine(values),
-    hasError,
+    triggers: {
+      validate,
+    },
+    isValid,
   };
 };
-
-const getCheckboxFieldSetValues = (fields: Fields) => {
-  const values = fields.map((field) => field.value);
-  const size = {
-    min: 0,
-    max: Number.MAX_SAFE_INTEGER,
-  };
-
-  const hasError = combine(values, (val) => val.length <= size.max && val.length >= size.min);
-
-  return {
-    value: combine(values, (list) => list.filter(Boolean)),
-    hasError,
-  };
-};
-
-export const createFieldSet = (config: FieldConfig) =>
-  createBaseFieldSet(config)(getInputFieldSetValues);
-export const createCheckBoxFieldSet = (config: FieldConfig) =>
-  createBaseFieldSet(config)(getCheckboxFieldSetValues);
