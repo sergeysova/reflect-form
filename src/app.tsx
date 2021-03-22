@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { CreditForm } from './examples/credit-form/page';
+import { UserForm } from './examples/form/page';
 
 const App = () => (
   <Switch>
-    <Route exact path="/" component={CreditForm} />
+    <Route exact path="/" component={UserForm} />
   </Switch>
 );
 
