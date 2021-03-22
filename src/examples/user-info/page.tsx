@@ -2,7 +2,7 @@ import * as React from 'react';
 import { reflect } from '@effector/reflect';
 import styled from 'styled-components';
 
-import { Checkbox } from '../../lib/form/checkbox';
+import { Checkbox } from 'lib/form/checkbox';
 import { Input } from 'lib/form/input';
 
 import {
@@ -84,7 +84,7 @@ const BooleanCheckbox = reflect({
   bind: {
     label: 'boolean чекбокс',
     defaultValue: checkboxBooleanField.value.map((state) => state),
-    checked: Boolean(checkboxBooleanField.value),
+    defaultChecked: true,
     ...getField(checkboxBooleanField),
   },
 });

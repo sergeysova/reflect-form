@@ -1,19 +1,5 @@
-import { combine, createEvent, forward, Store, Event } from 'effector';
-import { Field } from './createField';
-
-type FieldSetType = 'object' | 'array';
-
-type FieldSetValues = { [key: string]: Store<any> } | Store<any>[];
-
-interface FieldSet {
-  name: string;
-  type: 'fieldset';
-  value: Store<FieldSetValues>;
-  triggers: {
-    validate: Event<void>;
-  };
-  isValid: Store<boolean>;
-}
+import { combine, createEvent, forward, Store } from 'effector';
+import { Field, FieldSet, FieldSetType, FieldSetValues } from './types';
 
 const getFieldSetValidation = (fields: (FieldSet | Field<any>)[]) => {
   const validate = createEvent();
