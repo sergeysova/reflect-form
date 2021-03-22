@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { FieldValidator } from '../types';
+import { FieldValidator } from 'lib/types';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error: ReturnType<FieldValidator>;

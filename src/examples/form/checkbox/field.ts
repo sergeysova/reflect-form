@@ -1,7 +1,7 @@
 import { sample } from 'effector';
 
-import { CheckboxFieldConfig, Field } from '../types';
-import { createField } from '../createField';
+import { CheckboxFieldConfig, Field } from 'lib/types';
+import { createField } from 'lib/createField';
 
 export const checkboxField = ({
   name,

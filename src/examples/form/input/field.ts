@@ -1,8 +1,8 @@
 import { ChangeEvent } from 'react';
 import { guard, sample } from 'effector';
 
-import { Field, FieldValuePatten, InputFieldConfig } from '../types';
-import { createField } from '../createField';
+import { Field, FieldValuePatten, InputFieldConfig } from 'lib/types';
+import { createField } from 'lib/createField';
 
 const checkFieldPattern = (
   e: ChangeEvent<HTMLInputElement>,

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { reflect } from '@effector/reflect';
 import styled from 'styled-components';
 
-import { Checkbox } from 'lib/form/checkbox';
-import { Input } from 'lib/form/input';
+import { Checkbox } from './checkbox';
+import { Input } from './input';
 
 import {
   userName,

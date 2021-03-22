@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { UserForm } from './examples/user-info/page';
+import { UserForm } from './examples/form/page';
 
 const App = () => (
   <Switch>

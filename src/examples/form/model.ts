@@ -1,8 +1,8 @@
 import { combine } from 'effector';
 
-import { createFieldset } from 'lib/form/createFieldset';
-import { inputTextField } from 'lib/form/input';
-import { checkboxField } from 'lib/form/checkbox';
+import { createFieldset } from 'lib/createFieldset';
+import { inputTextField } from './input';
+import { checkboxField } from './checkbox';
 
 const fioPattern = /^([А-Яа-я]+\s){2,3}/gimu;
 
