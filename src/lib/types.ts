@@ -79,4 +79,5 @@ export interface FieldSet {
     validate: Event<void>;
   };
   isValid: Store<boolean>;
+  hasError?: Store<boolean>;
 }

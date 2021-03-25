@@ -1,4 +1,4 @@
-import { combine, createEvent, forward, Store } from 'effector';
+import { combine, createEvent, createStore, forward, Store } from 'effector';
 import { Field, FieldSet, FieldSetType, FieldSetValues } from './types';
 
 const getFieldSetValidation = (fields: (FieldSet | Field<any>)[]) => {
@@ -38,11 +38,11 @@ const getFieldSetValues = (
 
 export const createFieldset = (
   name: string,
-  type: FieldSetType,
   fields: (Field<any> | FieldSet)[],
+  type: FieldSetType,
 ): FieldSet => {
-  const values = getFieldSetValues(type, fields);
   const { validate, isValid } = getFieldSetValidation(fields);
+  const values = getFieldSetValues(type, fields);
 
   return {
     name,
