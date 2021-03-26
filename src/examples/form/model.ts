@@ -48,7 +48,7 @@ export const css = checkboxField({ name: 'css', fieldValue: 'css' });
 export const js = checkboxField({ name: 'js', fieldValue: 'js' });
 export const web = listSet('web', [html, css, js], { size: { min: 0, max: 2 } });
 
-const form = fieldSet('userInfo', [
+export const form = fieldSet('userInfo', [
   userName,
   userAge,
   checkboxBooleanField,

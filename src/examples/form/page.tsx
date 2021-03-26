@@ -17,6 +17,7 @@ import {
   $result,
   userCity,
   userAge,
+  form,
 } from './model';
 import { Content, Row, Wrapper } from './styles';
 
@@ -50,6 +51,9 @@ export const UserForm: React.FC = () => (
           <Row>
             <CssCheckbox />
           </Row>
+        </Row>
+        <Row>
+          <Reset>Reset</Reset>
         </Row>
       </form>
       <Result />
@@ -146,6 +150,16 @@ const CssCheckbox = reflect({
       (groupError, fieldValue) => groupError && !fieldValue.toString().length,
     ),
     ...getField(css),
+  },
+});
+
+const Reset = reflect({
+  view: styled.button``,
+  bind: {
+    onClick: (e) => {
+      e.preventDefault();
+      form.triggers.reset();
+    },
   },
 });
 

@@ -19,10 +19,12 @@ const createFieldEvents = (name: string): FieldEvents => {
 const createFiledTriggers = (name: string): FieldTriggers => {
   const onValidate = createEvent<void>(`${name}ValidationTriggered`);
   const onForceValidate = createEvent<void>(`${name}ForceValidationTriggered`);
+  const onReset = createEvent<void>(`${name}Reset`);
 
   return {
     onValidate,
     onForceValidate,
+    onReset,
   };
 };
 
@@ -38,14 +40,17 @@ export const createField = <T>({
   const $isValid = $value.map((value) => Boolean(value));
 
   const { onChanged, onBlurred, onFocused, onTouched } = createFieldEvents(name);
-  const { onValidate, onForceValidate } = createFiledTriggers(name);
+  const { onValidate, onForceValidate, onReset } = createFiledTriggers(name);
 
   $isTouched
     .on(onValidate, () => true)
     .on(onTouched, (touched) => {
       if (touched) return;
       return !touched;
-    });
+    })
+    .reset(onReset);
+
+  $error.reset(onReset);
 
   forward({
     from: onFocused,
@@ -85,6 +90,7 @@ export const createField = <T>({
     triggers: {
       validate: onValidate,
       forceValidate: onForceValidate,
+      reset: onReset,
     },
   };
 };

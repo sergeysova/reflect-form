@@ -29,12 +29,17 @@ export const createFieldset = <T>(
   name: string,
   value: Store<T>,
   validation: Validation,
-): FieldSet<T> => ({
-  name,
-  type: 'fieldset',
-  value,
-  triggers: {
-    validate: validation.validate,
-  },
-  isValid: validation.isValid,
-});
+): FieldSet<T> => {
+  const reset = createEvent<void>();
+
+  return {
+    name,
+    type: 'fieldset',
+    value,
+    triggers: {
+      validate: validation.validate,
+      reset,
+    },
+    isValid: validation.isValid,
+  };
+};

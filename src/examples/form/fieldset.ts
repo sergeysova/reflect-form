@@ -1,5 +1,5 @@
 // TODO create radioset
-import { combine, Store } from 'effector';
+import { combine, createEvent, forward, sample, Store } from 'effector';
 
 import { createFieldset, getFieldSetValidation } from 'lib/createFieldset';
 import { Field, FieldSet } from 'lib/types';
@@ -38,6 +38,11 @@ export const fieldSet = (
   const validation = getFieldSetValidation(fields);
 
   const fieldSet = createFieldset(name, combine(values), validation);
+
+  forward({
+    from: fieldSet.triggers.reset,
+    to: fields.map((field) => field.triggers.reset),
+  });
 
   return {
     ...fieldSet,
