@@ -3,7 +3,7 @@ import { createStore, sample, Store } from 'effector';
 import { CheckboxFieldConfig, Field } from 'lib/types';
 import { createField } from 'lib/createField';
 
-export interface RadioField extends Field<boolean | string> {
+export interface RadioField extends Field<boolean | string | null> {
   isChecked: Store<boolean>;
 }
 
@@ -15,15 +15,15 @@ export const radioField = ({
   requiredErrorText = 'Поле обязательно для заполнения',
 }: CheckboxFieldConfig): RadioField => {
   const { type, value, isTouched, isValid, error, hasError, triggers, handlers } = createField<
-    boolean | string
+    boolean | string | null
   >({
     name,
-    value: defaultChecked ? fieldValue : '',
+    value: defaultChecked ? fieldValue : null,
   });
 
   const isChecked = createStore<boolean>(defaultChecked);
 
-  value.on(handlers.onChange, (_, e) => (e.currentTarget.checked ? fieldValue : ''));
+  value.on(handlers.onChange, (_, e) => (e.currentTarget.checked ? fieldValue : null));
   isChecked.on(handlers.onChange, (_, e) => e.currentTarget.checked);
 
   sample({

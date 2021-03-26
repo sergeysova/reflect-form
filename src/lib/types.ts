@@ -71,10 +71,10 @@ export type FieldSetType = 'object' | 'array';
 
 export type FieldSetValues = { [key: string]: Store<any> } | Store<any>[];
 
-export interface FieldSet {
+export interface FieldSet<T> {
   name: string;
   type: 'fieldset';
-  value: Store<FieldSetValues>;
+  value: Store<T>;
   triggers: {
     validate: Event<void>;
   };

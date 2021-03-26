@@ -1,14 +1,6 @@
 import { ChangeEvent } from 'react';
-import { createEvent, createStore, forward, guard, sample } from 'effector';
-import {
-  CheckboxFieldConfig,
-  Field,
-  FieldConfig,
-  FieldEvents,
-  FieldTriggers,
-  FieldValuePatten,
-  InputFieldConfig,
-} from './types';
+import { createEvent, createStore, forward, sample } from 'effector';
+import { Field, FieldConfig, FieldEvents, FieldTriggers } from './types';
 
 const createFieldEvents = (name: string): FieldEvents => {
   const onChanged = createEvent<ChangeEvent<HTMLInputElement>>(`${name}Changed`);
