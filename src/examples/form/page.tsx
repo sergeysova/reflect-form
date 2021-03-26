@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { combine } from 'effector';
 import { reflect } from '@effector/reflect';
 import styled from 'styled-components';
 
@@ -9,6 +10,10 @@ import {
   userName,
   checkboxTextField,
   checkboxBooleanField,
+  js,
+  html,
+  css,
+  web,
   $result,
   userCity,
   userAge,
@@ -33,6 +38,18 @@ export const UserForm: React.FC = () => (
         </Row>
         <Row>
           <BooleanCheckbox />
+        </Row>
+        <Row>Выберите 2 технологии:</Row>
+        <Row>
+          <Row>
+            <JsCheckbox />
+          </Row>
+          <Row>
+            <HtmlCheckbox />
+          </Row>
+          <Row>
+            <CssCheckbox />
+          </Row>
         </Row>
       </form>
       <Result />
@@ -86,6 +103,49 @@ const BooleanCheckbox = reflect({
     defaultValue: checkboxBooleanField.value.map((state) => state),
     defaultChecked: true,
     ...getField(checkboxBooleanField),
+  },
+});
+
+// disabled option is only example dont use it :)
+const JsCheckbox = reflect({
+  view: Checkbox,
+  bind: {
+    label: 'JS',
+    defaultValue: js.value.map((state) => state),
+    disabled: combine(
+      web.hasError,
+      js.value,
+      (groupError, fieldValue) => groupError && !fieldValue.toString().length,
+    ),
+    ...getField(js),
+  },
+});
+
+const HtmlCheckbox = reflect({
+  view: Checkbox,
+  bind: {
+    label: 'HTML',
+    defaultValue: html.value.map((state) => state),
+    disabled: combine(
+      web.hasError,
+      html.value,
+      (groupError, fieldValue) => groupError && !fieldValue.toString().length,
+    ),
+    ...getField(html),
+  },
+});
+
+const CssCheckbox = reflect({
+  view: Checkbox,
+  bind: {
+    label: 'CSS',
+    defaultValue: css.value.map((state) => state),
+    disabled: combine(
+      web.hasError,
+      css.value,
+      (groupError, fieldValue) => groupError && !fieldValue.toString().length,
+    ),
+    ...getField(css),
   },
 });
 
