@@ -66,6 +66,7 @@ export interface Field<T> extends FieldState<T>, FieldInfo {
     validate: Event<void>;
     forceValidate: Event<void>;
     reset: Event<void>;
+    valueSet: Event<T>;
   };
 }
 

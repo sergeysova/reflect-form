@@ -54,6 +54,7 @@ export const UserForm: React.FC = () => (
         </Row>
         <Row>
           <Reset>Reset</Reset>
+          <SetName>Set name</SetName>
         </Row>
       </form>
       <Result />
@@ -159,6 +160,16 @@ const Reset = reflect({
     onClick: (e) => {
       e.preventDefault();
       form.triggers.reset();
+    },
+  },
+});
+
+const SetName = reflect({
+  view: styled.button``,
+  bind: {
+    onClick: (e) => {
+      e.preventDefault();
+      userName.triggers.valueSet('Иван');
     },
   },
 });

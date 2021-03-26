@@ -42,6 +42,10 @@ export const createField = <T>({
   const { onChanged, onBlurred, onFocused, onTouched } = createFieldEvents(name);
   const { onValidate, onForceValidate, onReset } = createFiledTriggers(name);
 
+  const valueSet = createEvent<T>();
+
+  $value.on(valueSet, (_, value) => value);
+
   $isTouched
     .on(onValidate, () => true)
     .on(onTouched, (touched) => {
@@ -52,12 +56,9 @@ export const createField = <T>({
 
   $error.reset(onReset);
 
-  forward({
-    from: onFocused,
-    to: onTouched,
-  });
-
+  forward({ from: onFocused, to: onTouched });
   forward({ from: onValidate, to: onForceValidate });
+  forward({ from: valueSet, to: onValidate });
 
   forward({
     from: {
@@ -69,10 +70,7 @@ export const createField = <T>({
     to: onForceValidate,
   });
 
-  sample({
-    source: $value,
-    clock: onBlurred,
-  });
+  sample({ source: $value, clock: onBlurred });
 
   return {
     type: 'field',
@@ -91,6 +89,7 @@ export const createField = <T>({
       validate: onValidate,
       forceValidate: onForceValidate,
       reset: onReset,
+      valueSet,
     },
   };
 };
