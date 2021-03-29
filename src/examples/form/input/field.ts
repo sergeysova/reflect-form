@@ -37,16 +37,18 @@ export const inputTextField = ({
     validateOn,
   });
 
-  value.on(
-    guard({
-      source: handlers.onChange,
-      filter: (value) => checkFieldPattern(value, valuePattern),
-    }),
-    (_, e) => {
-      if (valueAs === 'number') return Number.parseInt(e.currentTarget.value, 10) || '';
-      return e.currentTarget.value;
-    },
-  );
+  value
+    .on(
+      guard({
+        source: handlers.onChange,
+        filter: (value) => checkFieldPattern(value, valuePattern),
+      }),
+      (_, e) => {
+        if (valueAs === 'number') return Number.parseInt(e.currentTarget.value, 10) || '';
+        return e.currentTarget.value;
+      },
+    )
+    .reset(triggers.reset);
 
   sample({
     source: [value, isTouched],

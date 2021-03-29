@@ -16,6 +16,7 @@ export interface FieldEvents {
 export interface FieldTriggers {
   onValidate: Event<void>;
   onForceValidate: Event<void>;
+  onReset: Event<void>;
 }
 
 export interface FieldConfig<T> {
@@ -64,6 +65,8 @@ export interface Field<T> extends FieldState<T>, FieldInfo {
   triggers: {
     validate: Event<void>;
     forceValidate: Event<void>;
+    reset: Event<void>;
+    valueSet: Event<T>;
   };
 }
 
@@ -71,12 +74,13 @@ export type FieldSetType = 'object' | 'array';
 
 export type FieldSetValues = { [key: string]: Store<any> } | Store<any>[];
 
-export interface FieldSet {
+export interface FieldSet<T> {
   name: string;
   type: 'fieldset';
-  value: Store<FieldSetValues>;
+  value: Store<T>;
   triggers: {
     validate: Event<void>;
+    reset: Event<void>;
   };
   isValid: Store<boolean>;
   hasError?: Store<boolean>;

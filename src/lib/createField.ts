@@ -1,14 +1,6 @@
 import { ChangeEvent } from 'react';
-import { createEvent, createStore, forward, guard, sample } from 'effector';
-import {
-  CheckboxFieldConfig,
-  Field,
-  FieldConfig,
-  FieldEvents,
-  FieldTriggers,
-  FieldValuePatten,
-  InputFieldConfig,
-} from './types';
+import { createEvent, createStore, forward, sample } from 'effector';
+import { Field, FieldConfig, FieldEvents, FieldTriggers } from './types';
 
 const createFieldEvents = (name: string): FieldEvents => {
   const onChanged = createEvent<ChangeEvent<HTMLInputElement>>(`${name}Changed`);
@@ -27,10 +19,12 @@ const createFieldEvents = (name: string): FieldEvents => {
 const createFiledTriggers = (name: string): FieldTriggers => {
   const onValidate = createEvent<void>(`${name}ValidationTriggered`);
   const onForceValidate = createEvent<void>(`${name}ForceValidationTriggered`);
+  const onReset = createEvent<void>(`${name}Reset`);
 
   return {
     onValidate,
     onForceValidate,
+    onReset,
   };
 };
 
@@ -46,21 +40,25 @@ export const createField = <T>({
   const $isValid = $value.map((value) => Boolean(value));
 
   const { onChanged, onBlurred, onFocused, onTouched } = createFieldEvents(name);
-  const { onValidate, onForceValidate } = createFiledTriggers(name);
+  const { onValidate, onForceValidate, onReset } = createFiledTriggers(name);
+
+  const valueSet = createEvent<T>();
+
+  $value.on(valueSet, (_, value) => value);
 
   $isTouched
     .on(onValidate, () => true)
     .on(onTouched, (touched) => {
       if (touched) return;
       return !touched;
-    });
+    })
+    .reset(onReset);
 
-  forward({
-    from: onFocused,
-    to: onTouched,
-  });
+  $error.reset(onReset);
 
+  forward({ from: onFocused, to: onTouched });
   forward({ from: onValidate, to: onForceValidate });
+  forward({ from: valueSet, to: onValidate });
 
   forward({
     from: {
@@ -72,10 +70,7 @@ export const createField = <T>({
     to: onForceValidate,
   });
 
-  sample({
-    source: $value,
-    clock: onBlurred,
-  });
+  sample({ source: $value, clock: onBlurred });
 
   return {
     type: 'field',
@@ -93,6 +88,8 @@ export const createField = <T>({
     triggers: {
       validate: onValidate,
       forceValidate: onForceValidate,
+      reset: onReset,
+      valueSet,
     },
   };
 };

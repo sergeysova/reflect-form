@@ -1,7 +1,13 @@
-import { combine, createEvent, createStore, forward, Store } from 'effector';
-import { Field, FieldSet, FieldSetType, FieldSetValues } from './types';
+import { combine, createEvent, Event, forward, Store } from 'effector';
+import { FieldSet } from './types';
 
-const getFieldSetValidation = (fields: (FieldSet | Field<any>)[]) => {
+interface Validation {
+  validate: Event<void>;
+  isValid: Store<boolean>;
+}
+
+// TODO fix typings
+export const getFieldSetValidation = (fields: any[]): Validation => {
   const validate = createEvent();
 
   forward({
@@ -19,38 +25,21 @@ const getFieldSetValidation = (fields: (FieldSet | Field<any>)[]) => {
   return { validate, isValid };
 };
 
-const getFieldSetValues = (
-  type: FieldSetType,
-  fields: (FieldSet | Field<any>)[],
-): FieldSetValues => {
-  if (type === 'array') {
-    return fields.map((field) => field.value);
-  }
-
-  const values: { [key: string]: Store<any> } = {};
-
-  fields.forEach((field) => {
-    values[field.name] = field.value;
-  });
-
-  return values;
-};
-
-export const createFieldset = (
+export const createFieldset = <T>(
   name: string,
-  fields: (Field<any> | FieldSet)[],
-  type: FieldSetType,
-): FieldSet => {
-  const { validate, isValid } = getFieldSetValidation(fields);
-  const values = getFieldSetValues(type, fields);
+  value: Store<T>,
+  validation: Validation,
+): FieldSet<T> => {
+  const reset = createEvent<void>();
 
   return {
     name,
     type: 'fieldset',
-    value: combine(values),
+    value,
     triggers: {
-      validate,
+      validate: validation.validate,
+      reset,
     },
-    isValid,
+    isValid: validation.isValid,
   };
 };
