@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { FieldValidator } from 'lib/types';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  error: ReturnType<FieldValidator>;
+  error?: ReturnType<FieldValidator>;
   onChange: () => unknown;
 }
 

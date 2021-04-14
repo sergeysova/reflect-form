@@ -1,50 +1,26 @@
-import { ChangeEvent } from 'react';
-import { createEvent, createStore, forward, sample } from 'effector';
-import { Field, FieldConfig, FieldEvents, FieldTriggers } from './types';
+import { createEvent, createStore, forward } from 'effector';
 
-const createFieldEvents = (name: string): FieldEvents => {
-  const onChanged = createEvent<ChangeEvent<HTMLInputElement>>(`${name}Changed`);
-  const onFocused = createEvent<ChangeEvent<HTMLInputElement>>(`${name}Focused`);
-  const onBlurred = createEvent<ChangeEvent<HTMLInputElement>>(`${name}Blurred`);
-  const onTouched = createEvent<void>(`${name}Touched`);
+import { Field, FieldConfig } from './types';
 
-  return {
-    onChanged,
-    onFocused,
-    onBlurred,
-    onTouched,
-  };
-};
-
-const createFiledTriggers = (name: string): FieldTriggers => {
-  const onValidate = createEvent<void>(`${name}ValidationTriggered`);
-  const onForceValidate = createEvent<void>(`${name}ForceValidationTriggered`);
-  const onReset = createEvent<void>(`${name}Reset`);
-
-  return {
-    onValidate,
-    onForceValidate,
-    onReset,
-  };
-};
+import { createEvents, createTriggers } from './helpers';
 
 export const createField = <T>({
   name,
-  value,
+  initialValue,
   validateOn = 'change',
 }: FieldConfig<T>): Field<T> => {
-  const $value = createStore<T>(value);
+  const $initialValue = createStore<T>(initialValue as T);
   const $isTouched = createStore<boolean>(false);
+  const $isValid = $initialValue.map((value) => Boolean(value));
   const $error = createStore<string | null>(null);
   const $hasError = $error.map((error) => error !== null);
-  const $isValid = $value.map((value) => Boolean(value));
 
-  const { onChanged, onBlurred, onFocused, onTouched } = createFieldEvents(name);
-  const { onValidate, onForceValidate, onReset } = createFiledTriggers(name);
+  const { onChanged, onBlurred, onFocused, onTouched } = createEvents(name);
+  const { onValidate, onForceValidate, onReset } = createTriggers(name);
 
   const valueSet = createEvent<T>();
 
-  $value.on(valueSet, (_, value) => value);
+  $initialValue.on(valueSet, (_, value) => value);
 
   $isTouched
     .on(onValidate, () => true)
@@ -53,8 +29,6 @@ export const createField = <T>({
       return !touched;
     })
     .reset(onReset);
-
-  $error.reset(onReset);
 
   forward({ from: onFocused, to: onTouched });
   forward({ from: onValidate, to: onForceValidate });
@@ -70,16 +44,14 @@ export const createField = <T>({
     to: onForceValidate,
   });
 
-  sample({ source: $value, clock: onBlurred });
-
   return {
     type: 'field',
     name,
-    value: $value,
-    error: $error,
+    initialValue: $initialValue,
     isTouched: $isTouched,
-    hasError: $hasError,
     isValid: $isValid,
+    hasError: $hasError,
+    error: $error,
     handlers: {
       onChange: onChanged,
       onFocus: onFocused,
