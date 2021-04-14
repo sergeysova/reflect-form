@@ -1,45 +1,61 @@
-import { combine, createEvent, Event, forward, Store } from 'effector';
-import { FieldSet } from './types';
+import { combine, createStore, forward, Store } from 'effector';
 
-interface Validation {
-  validate: Event<void>;
-  isValid: Store<boolean>;
+import { FieldSetEntity, FieldSet, BaseField } from './types';
+
+import { createTriggers, getFieldSetValueAsArray, getFieldSetValueAsObject } from './helpers';
+
+interface Config<T> {
+  name: string;
+  initialValue?: T | null;
 }
 
-// TODO fix typings
-export const getFieldSetValidation = (fields: any[]): Validation => {
-  const validate = createEvent();
+const createFieldset = <T>({ name, initialValue }: Config<T>): FieldSetEntity => {
+  const $initialValue = createStore<T | null>(initialValue || null);
 
-  forward({
-    from: validate,
-    to: fields.map((field) => field.triggers.validate),
-  });
-
-  // TODO research cases when boolean checkbox defaults to true
-  // TODO look for cases to create checkbox isValid inside component
-  const isValid = combine(
-    fields.map((field) => field.isValid),
-    (errors) => !errors.includes(true),
-  );
-
-  return { validate, isValid };
-};
-
-export const createFieldset = <T>(
-  name: string,
-  value: Store<T>,
-  validation: Validation,
-): FieldSet<T> => {
-  const reset = createEvent<void>();
+  const { onValidate, onForceValidate, onReset, onValueSet } = createTriggers(name);
 
   return {
-    name,
     type: 'fieldset',
-    value,
+    name,
+    initialValue: $initialValue,
     triggers: {
-      validate: validation.validate,
-      reset,
+      validate: onValidate,
+      forceValidate: onForceValidate,
+      reset: onReset,
+      valueSet: onValueSet,
     },
-    isValid: validation.isValid,
+  };
+};
+
+export const fieldSet = (
+  name: string,
+  fields: (FieldSet<{ [key: string]: Store<any> }> | BaseField<any>)[],
+): FieldSet<{ [key: string]: Store<any> }> => {
+  const values = getFieldSetValueAsObject(fields);
+
+  const fieldSet = createFieldset({ name, initialValue: combine(values) });
+
+  forward({
+    from: fieldSet.triggers.reset,
+    to: fields.map((field) => field.triggers.reset),
+  });
+
+  return {
+    ...fieldSet,
+    value: combine(values),
+  };
+};
+
+export const listSet = (
+  name: string,
+  fields: (FieldSet<any> | BaseField<any>)[],
+): FieldSet<any> => {
+  const values = getFieldSetValueAsArray(fields);
+
+  const fieldSet = createFieldset<any>({ name, initialValue: combine(values) });
+
+  return {
+    ...fieldSet,
+    value: combine(values, (values) => values.filter((value) => value.length > 0)),
   };
 };
