@@ -1,8 +1,6 @@
 import { combine } from 'effector';
 
-import { createField } from 'lib/createField';
-import { fieldSet, listSet } from 'lib/createFieldset';
-import { createInput, createSelect, createCheckbox } from 'lib/presets';
+import { createField, fieldSet, listSet, createInput, createSelect, createCheckbox } from 'lib';
 
 const inputFieldPattern = /^([А-Яа-я]+\s){2,3}/gimu;
 

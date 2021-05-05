@@ -1,6 +1,8 @@
 {
   "presets": [
-    ["@babel/preset-typescript"],
+    [
+      "@babel/preset-typescript"
+    ],
     [
       "@babel/preset-env",
       {
@@ -8,6 +10,20 @@
         "corejs": 3
       }
     ],
+    "patronum/babel-preset",
     "@babel/preset-react"
+  ],
+  "plugins": [
+    [
+      "effector/babel-plugin",
+      {
+        "factories": [
+          "src/lib/presets",
+          "src/lib/helpers",
+          "src/lib/create-field",
+          "src/lib/create-fieldset"
+        ]
+      }
+    ]
   ]
 }

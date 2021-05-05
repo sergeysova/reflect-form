@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "src",
     "esModuleInterop": true,
@@ -22,7 +22,8 @@
     "noImplicitAny": true,
     "noEmit": true,
     "target": "es2018",
-    "sourceMap": false,
+    "sourceMap": true,
+    "declaration": true,
     "strict": true,
     "strictNullChecks": true,
     "skipLibCheck": true

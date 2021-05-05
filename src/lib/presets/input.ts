@@ -1,7 +1,7 @@
 import { createStore, sample, Store } from 'effector';
 
 import { BaseField, FieldConfig } from '../types';
-import { createField } from '../createField';
+import { createField } from '../create-field';
 
 type FieldValidator<T> = (value: T) => string | null;
 

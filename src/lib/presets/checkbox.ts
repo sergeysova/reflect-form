@@ -1,7 +1,7 @@
 import { createStore, sample } from 'effector';
 
 import { BaseField, FieldConfig } from '../types';
-import { createField } from '../createField';
+import { createField } from '../create-field';
 
 interface CheckboxConfig<T> extends FieldConfig<T> {
   isBoolean?: boolean;

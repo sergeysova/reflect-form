@@ -2,7 +2,7 @@ import { createStore, sample, Store } from 'effector';
 import { OptionHTMLAttributes } from 'react';
 
 import { BaseField, FieldConfig } from '../types';
-import { createField } from '../createField';
+import { createField } from '../create-field';
 
 type SelectOptions = OptionHTMLAttributes<HTMLOptionElement>;
 
@@ -25,11 +25,11 @@ export const createSelect = ({
   const initialValue = options.filter((option) => option.selected)[0];
   const field = createField<any>({
     name,
-    initialValue: initialValue?.value || '',
+    initialValue: initialValue.value || '',
     validateOn,
   });
 
-  const $value = createStore<any>(initialValue?.value || '');
+  const $value = createStore<any>(initialValue.value || '');
 
   $value.on(field.handlers.onChange, (_, e) => e.currentTarget.value).reset(field.triggers.reset);
 
