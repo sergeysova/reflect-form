@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup NodeJS v14.x
         uses: actions/setup-node@v2
         with:
@@ -21,7 +21,7 @@ jobs:
         run: yarn install --non-interactive --no-progress --frozen-lockfile
 
       - name: Build
-        run: yarn build
+        run: yarn build:demo
 
       - name: Create 404.html to handle all routes by SPA
         run: cp ./build/public/index.html ./build/public/404.html
