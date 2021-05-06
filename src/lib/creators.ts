@@ -1,7 +1,7 @@
-import { createEvent, Store } from 'effector';
+import { createEvent } from 'effector';
 import { ChangeEvent } from 'react';
 
-import { BaseField, Events, FieldSet, Triggers } from './types';
+import { Events, Triggers } from './types';
 
 export function createTriggers(name: string): Triggers {
   const onValidate = createEvent<void>(`${name}ValidationTriggered`);
@@ -29,20 +29,4 @@ export function createEvents(name: string): Events {
     onBlurred,
     onTouched,
   };
-}
-
-export function getFieldSetValueAsArray(fields: (FieldSet<any> | BaseField<any>)[]) {
-  return fields.map((field) => field.value);
-}
-
-export function getFieldSetValueAsObject(
-  fields: (FieldSet<{ [key: string]: Store<any> }> | BaseField<any>)[],
-) {
-  const values: { [key: string]: Store<any> } = {};
-
-  fields.forEach((field) => {
-    values[field.name] = field.value;
-  });
-
-  return values;
 }

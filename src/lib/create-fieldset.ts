@@ -1,15 +1,16 @@
 import { combine, createStore, forward, Store } from 'effector';
+import { getFieldsetValueAsArray, getFieldsetValueAsObject } from './getters';
 
-import { FieldSetEntity, FieldSet, BaseField } from './types';
+import { FieldsetEntity, Fieldset, BaseField } from './types';
 
-import { createTriggers, getFieldSetValueAsArray, getFieldSetValueAsObject } from './helpers';
+import { createTriggers } from './creators';
 
 interface Config<T> {
   name: string;
   initialValue?: T | null;
 }
 
-const createFieldset = <T>({ name, initialValue }: Config<T>): FieldSetEntity => {
+function createFieldsetEntity<T>({ name, initialValue }: Config<T>): FieldsetEntity {
   const $initialValue = createStore<T | null>(initialValue || null);
 
   const { onValidate, onForceValidate, onReset, onValueSet } = createTriggers(name);
@@ -25,15 +26,15 @@ const createFieldset = <T>({ name, initialValue }: Config<T>): FieldSetEntity =>
       valueSet: onValueSet,
     },
   };
-};
+}
 
-export const fieldSet = (
+export function createFieldset(
   name: string,
-  fields: (FieldSet<{ [key: string]: Store<any> }> | BaseField<any>)[],
-): FieldSet<{ [key: string]: Store<any> }> => {
-  const values = getFieldSetValueAsObject(fields);
+  fields: (Fieldset<{ [key: string]: Store<any> }> | BaseField<any>)[],
+): Fieldset<{ [key: string]: Store<any> }> {
+  const values = getFieldsetValueAsObject(fields);
 
-  const fieldSet = createFieldset({ name, initialValue: combine(values) });
+  const fieldSet = createFieldsetEntity({ name, initialValue: combine(values) });
 
   forward({
     from: fieldSet.triggers.reset,
@@ -44,18 +45,18 @@ export const fieldSet = (
     ...fieldSet,
     value: combine(values),
   };
-};
+}
 
-export const listSet = (
+export function createList(
   name: string,
-  fields: (FieldSet<any> | BaseField<any>)[],
-): FieldSet<any> => {
-  const values = getFieldSetValueAsArray(fields);
+  fields: (Fieldset<any> | BaseField<any>)[],
+): Fieldset<any> {
+  const values = getFieldsetValueAsArray(fields);
 
-  const fieldSet = createFieldset<any>({ name, initialValue: combine(values) });
+  const fieldSet = createFieldsetEntity<any>({ name, initialValue: combine(values) });
 
   return {
     ...fieldSet,
     value: combine(values, (values) => values.filter((value) => value.length > 0)),
   };
-};
+}

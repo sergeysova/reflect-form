@@ -64,7 +64,7 @@ export interface BaseField<T> extends Field<T> {
 }
 
 // Базовый тип для Fieldset
-export interface FieldSetEntity {
+export interface FieldsetEntity {
   type: 'fieldset';
   name: string;
   initialValue?: any;
@@ -76,6 +76,6 @@ export interface FieldSetEntity {
   };
 }
 
-export interface FieldSet<T> extends FieldSetEntity {
+export interface Fieldset<T> extends FieldsetEntity {
   value: Store<T>;
 }

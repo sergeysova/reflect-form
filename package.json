@@ -5,13 +5,23 @@
   "main": "dist/reflect-form.cjs.js",
   "module": "dist/reflect-form.esm.js",
   "browser": "dist/reflect-form.umd.js",
+  "types": "dist/reflect-form.d.ts",
   "scripts": {
     "start": "razzle start --type=spa",
     "start:prod": "serve -s build/public",
     "build:demo": "razzle build --type=spa",
-    "test": "razzle test --env=jsdom --passWithNoTests"
+    "test": "razzle test --env=jsdom --passWithNoTests",
+    "build": "rollup -c",
+    "prepublishOnly": "yarn build"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {},
+  "peerDependencies": {
+    "effector": "^21.8.0",
+    "react": "^16.14.0 || ^17.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/preset-env": "^7.12.11",
@@ -44,6 +54,7 @@
     "react-is": "^16.8.0",
     "react-router-dom": "^5.2.0",
     "rollup": "^2.47.0",
+    "rollup-plugin-dts": "^3.0.1",
     "rollup-plugin-terser": "^7.0.2",
     "styled-components": "^5.2.1",
     "stylelint": "^13.10.0",
@@ -77,5 +88,5 @@
   "bugs": {
     "url": "https://github.com/sergeysova/reflect-form/issues"
   },
-  "homepage": "https://github.com/sergeysova/reflect-form#readme"
+  "homepage": "https://github.com/sergeysova/reflect-form"
 }

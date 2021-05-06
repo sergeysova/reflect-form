@@ -19,7 +19,8 @@
       {
         "factories": [
           "src/lib/presets",
-          "src/lib/helpers",
+          "src/lib/creators",
+          "src/lib/getters",
           "src/lib/create-field",
           "src/lib/create-fieldset"
         ]

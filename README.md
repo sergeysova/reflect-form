@@ -135,16 +135,16 @@ Creates group of fields or groups inside groups
 ***1. Create custom fieldset***
 
 ```tsx
-export const listSet = (
+export const createList = (
   name: string,
-  fields: (FieldSet<any> | BaseField<any>)[],
-): FieldSet<any> => {
-  const values = getFieldSetValueAsArray(fields);
+  fields: (Fieldset<any> | BaseField<any>)[],
+): Fieldset<any> => {
+  const values = getFieldsetValueAsArray(fields);
 
-  const fieldSet = createFieldset<any>({ name, initialValue: combine(values) });
+  const createFieldset = createFieldset<any>({ name, initialValue: combine(values) });
 
   return {
-    ...fieldSet,
+    ...createFieldset,
     value: combine(values, (values) => values.filter((value) => value.length > 0)),
   };
 };
@@ -170,7 +170,7 @@ const email = createField({
 });
 
 const $user = createFieldset('user', [firstName, lastName]);
-const $list = listSet('list', [firstName, lastName]);
+const $list = createList('list', [firstName, lastName]);
 
 const form = createFieldset('form', [$user, email, $list]);
 

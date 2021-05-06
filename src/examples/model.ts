@@ -1,6 +1,11 @@
-import { combine } from 'effector';
-
-import { createField, fieldSet, listSet, createInput, createSelect, createCheckbox } from 'lib';
+import {
+  createField,
+  createFieldset,
+  createList,
+  createInput,
+  createSelect,
+  createCheckbox,
+} from 'lib';
 
 const inputFieldPattern = /^([А-Яа-я]+\s){2,3}/gimu;
 
@@ -60,13 +65,13 @@ export const booleanCheckboxField = createCheckbox({
   isBoolean: true,
 });
 
-const listGroup = listSet('listGroup', [
+const listGroup = createList('listGroup', [
   textCheckboxField,
   textDefaultCheckedCheckboxField,
   booleanCheckboxField,
 ]);
 
-const form = fieldSet('baseFieldSet', [
+const form = createFieldset('baseFieldSet', [
   inputFieldWithValidator,
   selectFieldWithInitialValue,
   textCheckboxField,
@@ -75,8 +80,4 @@ const form = fieldSet('baseFieldSet', [
   listGroup,
 ]);
 
-const $preview = combine(form.value, (value) => ({
-  value,
-}));
-
-export const $result = $preview.map((s) => JSON.stringify(s, null, 2));
+export const $result = form.value.map((s) => JSON.stringify(s, null, 2));

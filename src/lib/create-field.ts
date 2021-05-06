@@ -2,7 +2,7 @@ import { createEvent, createStore, forward } from 'effector';
 
 import { Field, FieldConfig } from './types';
 
-import { createEvents, createTriggers } from './helpers';
+import { createEvents, createTriggers } from './creators';
 
 export const createField = <T>({
   name,

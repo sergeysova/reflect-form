@@ -9,19 +9,19 @@ interface Config<T> extends FieldConfig<T> {
   validators?: FieldValidator<T>[];
 }
 
-interface InputField<T> extends BaseField<T> {
+export interface InputField<T> extends BaseField<T> {
   value: Store<T>;
   error: Store<ReturnType<FieldValidator<T>>>;
 }
 
-export const createInput = ({
+export function createInput({
   name,
   initialValue = '',
   isRequired = false,
   requiredErrorText = 'Поле обязательно для заполнения',
   validateOn,
   validators = [],
-}: Config<string>): InputField<string> => {
+}: Config<string>): InputField<string> {
   const field = createField<string>({ name, initialValue, validateOn });
 
   const $value = createStore<string>(initialValue);
@@ -52,4 +52,4 @@ export const createInput = ({
     value: $value,
     ...field,
   };
-};
+}

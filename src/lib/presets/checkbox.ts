@@ -3,19 +3,19 @@ import { createStore, sample } from 'effector';
 import { BaseField, FieldConfig } from '../types';
 import { createField } from '../create-field';
 
-interface CheckboxConfig<T> extends FieldConfig<T> {
+export interface CheckboxConfig<T> extends FieldConfig<T> {
   isBoolean?: boolean;
   defaultChecked?: boolean;
 }
 
-export const createCheckbox = ({
+export function createCheckbox({
   name,
   initialValue = '',
   isRequired,
   defaultChecked = false,
   isBoolean,
   requiredErrorText = 'Поле обязательно для заполнения',
-}: CheckboxConfig<any>): BaseField<any> => {
+}: CheckboxConfig<any>): BaseField<any> {
   const getInitialValue = () => {
     if (defaultChecked) {
       if (isBoolean) return true;
@@ -50,4 +50,4 @@ export const createCheckbox = ({
     value: $value,
     ...field,
   };
-};
+}

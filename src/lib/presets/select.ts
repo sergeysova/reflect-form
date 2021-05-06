@@ -10,18 +10,18 @@ interface Config<T> extends FieldConfig<T> {
   options: SelectOptions[];
 }
 
-interface SelectField<T> extends BaseField<T> {
+export interface SelectField<T> extends BaseField<T> {
   value: Store<T>;
   options: SelectOptions[];
 }
 
-export const createSelect = ({
+export function createSelect({
   name,
   isRequired = false,
   requiredErrorText = 'Поле обязательно для заполнения',
   validateOn,
   options = [],
-}: Config<string>): SelectField<string> => {
+}: Config<string>): SelectField<string> {
   const initialValue = options.filter((option) => option.selected)[0];
   const field = createField<any>({
     name,
@@ -51,4 +51,4 @@ export const createSelect = ({
     options,
     ...field,
   };
-};
+}
