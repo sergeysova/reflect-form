@@ -3,7 +3,7 @@
 ### Input view
 
 ```tsx
-import * as React from 'react';
+import React from 'react';
 
 type FieldValidator<T = string> = (value: T) => string | null;
 
@@ -29,35 +29,31 @@ Use ```createField``` to create your own fields
 **Examples**
 
 ***1. Create custom field***
+
 ```tsx
 import { createStore, sample, Store } from 'effector';
+import { createField, BaseField, FieldConfig, FieldValidator } from 'reflect-form';
 
-import { BaseField, FieldConfig } from 'types';
-import { createField } from 'createField';
-
-// 1. create your own field validator
-type FieldValidator<T> = (value: T) => string | null;
-
-// 2. extend field config form base config
+// 1. extend field config form base config
 interface Config<T> extends FieldConfig<T> {
   validators?: FieldValidator<T>[];
 }
 
-// 3. extend your field from BaseField
+// 2. extend your field from BaseField
 interface InputField<T> extends BaseField<T> {
   value: Store<T>;
   error: Store<ReturnType<FieldValidator<T>>>;
 }
 
-// 4. create any field
-export const createInput = ({
+// 3. create any field
+export function createInput({
   name,
   initialValue = '',
   isRequired = false,
   requiredErrorText = 'Поле обязательно для заполнения',
   validateOn,
   validators = [],
-}: Config<string>): InputField<string> => {
+}: Config<string>): InputField<string> {
   const field = createField<string>({ name, initialValue, validateOn });
 
   const $value = createStore<string>(initialValue);
@@ -135,10 +131,10 @@ Creates group of fields or groups inside groups
 ***1. Create custom fieldset***
 
 ```tsx
-export const createList = (
+export function createList(
   name: string,
   fields: (Fieldset<any> | BaseField<any>)[],
-): Fieldset<any> => {
+): Fieldset<any> {
   const values = getFieldsetValueAsArray(fields);
 
   const createFieldset = createFieldset<any>({ name, initialValue: combine(values) });
