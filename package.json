@@ -1,6 +1,6 @@
 {
   "name": "reflect-form",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Effector forms over reflect",
   "main": "dist/reflect-form.cjs.js",
   "module": "dist/reflect-form.esm.js",
