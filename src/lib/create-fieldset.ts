@@ -10,7 +10,7 @@ interface Config<T> {
   initialValue?: T | null;
 }
 
-function createFieldsetEntity<T>({ name, initialValue }: Config<T>): FieldsetEntity {
+export function createFieldsetEntity<T>({ name, initialValue }: Config<T>): FieldsetEntity {
   const $initialValue = createStore<T | null>(initialValue || null);
 
   const { onValidate, onForceValidate, onReset, onValueSet } = createTriggers(name);
