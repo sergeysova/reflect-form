@@ -1,3 +1,4 @@
-export { createInput } from './input';
-export { createSelect } from './select';
 export { createCheckbox } from './checkbox';
+export { createInput } from './input';
+export { createMultiSelect } from './multiselect';
+export { createSelect } from './select';

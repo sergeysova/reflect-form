@@ -1,10 +1,11 @@
 import {
+  createCheckbox,
   createField,
   createFieldset,
-  createList,
   createInput,
+  createList,
+  createMultiSelect,
   createSelect,
-  createCheckbox,
 } from 'lib';
 
 const inputFieldPattern = /^([А-Яа-я]+\s){2,3}/gimu;
@@ -26,6 +27,30 @@ const selectOptions = [
   },
 ];
 
+const multiSelectOptions = [
+  {
+    value: 'option 1',
+    label: 'option 1',
+    selected: true,
+  },
+  {
+    value: 'option 2',
+    label: 'option 2',
+  },
+  {
+    value: 'option 3',
+    label: 'option 3',
+    selected: true,
+  },
+  {
+    value: 'option disabled',
+    label: 'option disabled',
+    disabled: true,
+  },
+];
+
+export const multiSelectValues = ['option 1', 'option 2'];
+
 export const baseField = createField({
   name: 'baseField',
   initialValue: 'Base field with initial value',
@@ -46,6 +71,11 @@ export const inputFieldWithValidator = createInput({
 export const selectFieldWithInitialValue = createSelect({
   name: 'selectField',
   options: selectOptions,
+});
+
+export const multiSelectFieldWithInitialValue = createMultiSelect({
+  name: 'multiSelectField',
+  options: multiSelectOptions,
 });
 
 export const textCheckboxField = createCheckbox({
@@ -74,6 +104,7 @@ const listGroup = createList('listGroup', [
 const form = createFieldset('baseFieldSet', [
   inputFieldWithValidator,
   selectFieldWithInitialValue,
+  multiSelectFieldWithInitialValue,
   textCheckboxField,
   textDefaultCheckedCheckboxField,
   booleanCheckboxField,

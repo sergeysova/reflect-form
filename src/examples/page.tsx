@@ -12,6 +12,7 @@ import {
   baseField,
   booleanCheckboxField,
   inputFieldWithValidator,
+  multiSelectFieldWithInitialValue,
   selectFieldWithInitialValue,
   textCheckboxField,
   textDefaultCheckedCheckboxField,
@@ -29,6 +30,9 @@ export const ExampleForm: React.FC = () => (
         </Row>
         <Row>
           <SelectField />
+        </Row>
+        <Row>
+          <MultiSelectField />
         </Row>
         <Row>
           <div>
@@ -67,6 +71,16 @@ const SelectField = reflect({
     value: selectFieldWithInitialValue.value.map((v) => v),
     options: selectFieldWithInitialValue.options,
     ...selectFieldWithInitialValue.handlers,
+  },
+});
+
+const MultiSelectField = reflect({
+  view: Select,
+  bind: {
+    options: multiSelectFieldWithInitialValue.options.map((v) => v),
+    value: multiSelectFieldWithInitialValue.value.map((v) => v),
+    multiple: true,
+    ...multiSelectFieldWithInitialValue.handlers,
   },
 });
 
